@@ -5,7 +5,7 @@
 # before a new game starts).
 
 import os
-scores_file_name = "E:\\Studies\\DevOps\\World_Of_Games2\\Scores.txt"
+scores_file_name = "/opt/wog/Scores.txt"
 error = "Something went wrong..."
 
 

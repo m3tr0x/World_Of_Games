@@ -26,11 +26,11 @@ def add_score(points):
         print("Your score is", new_score)
     except IOError:
         print("Can't read Scores file, create new file named 'Current_Score'")
-        my_file_new = open("E:\\Studies\\DevOps\\World_Of_Games2\\Current_Score.txt", 'w+')
+        my_file_new = open("/opt/wog/Current_Score.txt", 'w+')
         my_file_new.write(str(points))
         my_file_new.close()
         print("Your current score is", points, "\n")
         print("Creating a new Scores file")
-        my_file_new = open("E:\\Studies\\DevOps\\World_Of_Games2\\Scores.txt", 'w+')
+        my_file_new = open("/opt/wog/Scores.txt", 'w+')
         my_file_new.write(str(points))
         my_file_new.close()
