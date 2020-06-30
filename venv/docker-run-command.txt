@@ -1,0 +1,2 @@
+docker build -t wog:v1 .
+docker run -d --name wog_docker -p 5000:5000 wog:v1
