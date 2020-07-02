@@ -6,7 +6,7 @@ pipeline {
 				echo 'Building test environment'
 				bat 'docker-machine start'
 				dir ('C:\\Users\\aviv0\\PycharmProjects\\World_Of_Games2\\venv') {
-					bat 'docker-compose up'
+					bat 'docker-compose up -d'
 				}
 				echo 'Finished Building test environment'
 			}
