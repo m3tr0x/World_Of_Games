@@ -5,8 +5,8 @@ pipeline {
 			steps {
 				echo 'Building test environment'
 				sh "cd 'C:\\Users\\aviv0\\PycharmProjects\\World_Of_Games2\\venv'"
-				cmd_exec('docker-machine start')
-				cmd_exec('docker-compose up')
+				bat 'docker-machine start'
+				bat 'docker-compose up'
 				echo 'Finished Building test environment'
 			}
 		}
@@ -27,7 +27,7 @@ pipeline {
 			steps {
 				echo 'shutting down testing environment'
 				sh "cd 'C:\\Users\\aviv0\\PycharmProjects\\World_Of_Games2\\venv'"
-				cmd_exec('docker-machine stop')
+				bat 'docker-machine stop'
 			}
 		}
 	}
