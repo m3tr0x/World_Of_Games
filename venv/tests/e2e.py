@@ -13,7 +13,7 @@ driver = webdriver.Chrome(executable_path="E:\\Studies\\DevOps\\chromedriver.exe
 
 
 def test_scores_service(app_url):
-    driver.get('http://127.0.0.1:5000')
+    driver.get('http://192.168.99.100:8777')
     score = driver.find_element_by_id("score").text
     if int(score) <= 1000 and int(score) >= 0:
         driver.quit()
@@ -24,10 +24,14 @@ def test_scores_service(app_url):
 
 
 def main_function():
-    url='http://127.0.0.1:5000'
+    url='http://192.168.99.100:8777'
     result = test_scores_service(url)
     if result == True:
         exit_code = 0
     else:
         exit_code = -1
     return exit_code
+
+if __name__ == '__main__':
+    result = main_function()
+    print(result)
