@@ -4,7 +4,7 @@ pipeline {
 		stage('build') {
 		  steps {
 			echo 'Building test environment'
-			sh 'cd C:\\Users\\aviv0\\PycharmProjects\\World_Of_Games2\\venv'
+			dir('cd C:\\Users\\aviv0\\PycharmProjects\\World_Of_Games2\\venv')
 			sh 'docker-machine start'
 			sh 'docker-compose up'
 			echo 'Finished Building test environment'
@@ -19,14 +19,14 @@ pipeline {
 		stage('Test') {
 		  steps {
 			echo 'Starting the Test'
-			sh 'cd C:\\Users\\aviv0\\PycharmProjects\\World_Of_Games2\\venv\\tests'
+			dir('C:\\Users\\aviv0\\PycharmProjects\\World_Of_Games2\\venv\\tests')
 			sh 'python e2e.py'
 			}
 		}
 		stage('Shutdown') {
 		  steps {
 			echo 'shutting down testing environment'
-			sh 'cd C:\\Users\\aviv0\\PycharmProjects\\World_Of_Games2\\venv'
+			dir('C:\\Users\\aviv0\\PycharmProjects\\World_Of_Games2\\venv')
 			sh 'docker-machine stop'
 			}
 		}
