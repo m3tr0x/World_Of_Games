@@ -29,6 +29,7 @@ pipeline {
 			steps {
 				echo 'shutting down testing environment'
 				bat 'docker rm venv_wog_1'
+				bat 'docker rmi venv_wog'
 				bat 'docker-machine stop'
 			}
 		}
