@@ -23,11 +23,13 @@ pipeline {
 				dir('C:\\Users\\aviv0\\PycharmProjects\\World_Of_Games2\\venv\\tests') {
 					bat 'python e2e.py'	
 				}
+				echo 'Test Passed Succssfully'
 			}
 		}
 		stage('Shutdown Test Env.') {
 			steps {
 				echo 'shutting down testing environment'
+				bat 'docker stop venv_wog_1'
 				bat 'docker rm venv_wog_1'
 				bat 'docker rmi venv_wog'
 				bat 'docker-machine stop'
