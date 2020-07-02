@@ -8,12 +8,14 @@
 # Will call our tests function.
 # The main function will return -1 as an OS exit code if the tests failed and 0 if it passed.
 
+import sys, os, subprocess
 from selenium import webdriver
 driver = webdriver.Chrome(executable_path="E:\\Studies\\DevOps\\chromedriver.exe")
 
 
+
 def test_scores_service(app_url):
-    driver.get('http://192.168.99.100:8777')
+    driver.get(app_url)
     score = driver.find_element_by_id("score").text
     if int(score) <= 1000 and int(score) >= 0:
         driver.quit()
@@ -24,14 +26,14 @@ def test_scores_service(app_url):
 
 
 def main_function():
-    url='http://192.168.99.100:8777'
+    host_ip = os.popen("docker-machine ip").read()
+    url='http://'+str(host_ip[0:14])+':8777'
     result = test_scores_service(url)
     if result == True:
-        exit_code = 0
+        return sys.exit(0)
     else:
-        exit_code = -1
-    return exit_code
+        return sys.exit(-1)
 
 if __name__ == '__main__':
-    result = main_function()
-    print(result)
+    main_function()
+

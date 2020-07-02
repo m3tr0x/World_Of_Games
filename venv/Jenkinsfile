@@ -13,8 +13,8 @@ pipeline {
 		}
 		stage ("Intialization") {
 			steps {
-				echo 'Waiting 5 minutes for deployment to complete prior start testing'
-				sleep 300 
+				echo 'Waiting 20 sec for deployment to complete prior start testing'
+				sleep 20 
 			}
 		}
 		stage('Testing') {
@@ -28,6 +28,7 @@ pipeline {
 		stage('Shutdown Test Env.') {
 			steps {
 				echo 'shutting down testing environment'
+				bat 'docker rm venv_wog_1'
 				bat 'docker-machine stop'
 			}
 		}
