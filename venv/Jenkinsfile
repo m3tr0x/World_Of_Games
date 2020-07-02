@@ -1,33 +1,36 @@
 pipeline {
-  agent any
+	agent any
 	stages {
-		stage('build') {
-		  steps {
-			echo 'Building test environment'
-			dir('cd C:\\Users\\aviv0\\PycharmProjects\\World_Of_Games2\\venv')
-			sh 'docker-machine start'
-			sh 'docker-compose up'
-			echo 'Finished Building test environment'
-		  }
-		}
-		stage ("wait_prior_starting_e2e_testing") {
+		stage('Build Test Env.') {
 			steps {
-			echo 'Waiting 5 minutes for deployment to complete prior start testing'
-			sleep 300 // seconds
+				echo 'Building test environment'
+				dir('cd C:\\Users\\aviv0\\PycharmProjects\\World_Of_Games2\\venv') {
+					sh 'docker-machine start'
+					sh 'docker-compose up'
+				}
+			echo 'Finished Building test environment'
 			}
 		}
-		stage('Test') {
-		  steps {
-			echo 'Starting the Test'
-			dir('C:\\Users\\aviv0\\PycharmProjects\\World_Of_Games2\\venv\\tests')
-			sh 'python e2e.py'
+		stage ("Intialization") {
+			steps {
+				echo 'Waiting 5 minutes for deployment to complete prior start testing'
+				sleep 300 // seconds
 			}
 		}
-		stage('Shutdown') {
-		  steps {
-			echo 'shutting down testing environment'
-			dir('C:\\Users\\aviv0\\PycharmProjects\\World_Of_Games2\\venv')
-			sh 'docker-machine stop'
+		stage('Testing') {
+			steps {
+				echo 'Starting the Test'
+				dir('C:\\Users\\aviv0\\PycharmProjects\\World_Of_Games2\\venv\\tests') {
+					sh 'python e2e.py'
+				}
+			}
+		}
+		stage('Shutdown Test Env.') {
+			steps {
+				echo 'shutting down testing environment'
+				dir('C:\\Users\\aviv0\\PycharmProjects\\World_Of_Games2\\venv') {
+					sh 'docker-machine stop'
+				}
 			}
 		}
 	}
