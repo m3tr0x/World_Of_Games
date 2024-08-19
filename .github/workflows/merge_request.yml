@@ -1,0 +1,27 @@
+name: pull request merge POST
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  send_post_request:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12' 
+      - name: Install dependencies
+        run: pip install requests
+      - name: Send POST request
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            https://your-api-gateway-endpoint \
+            -d '{
+              "repository": "${{ github.repository }}",
+              "changed_files": "${{ toJson(github.event.pull_request.files) }}"
+            }'
