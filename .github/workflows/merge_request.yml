@@ -2,21 +2,31 @@ name: pull request merge POST to AWS
 
 on:
   pull_request:
-    types: [merged]
-
+    branches:
+      - main
+    types: [closed]
+    
 jobs:
   send_post_request:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup AWS account
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region:  eu-north-1
-      - name: Trigger Lambda
-        uses: actions/aws-lambda@v2
-        with:
-          lambda-function-name: pull_request_changes_log
-          payload: ${{ toJson(github.event) }}
+    - name: Checkout
+      uses: actions/checkout@v3
+      
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      
+    - name: Terraform Init
+      run: terraform init
+      
+    - name: Terraform Validate
+      run: terraform validate
+      
+    - name: Terraform Apply
+      run: terraform apply -auto-approve
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        GITHUB_SECRET: ${{ secrets.GITHUB_SECRET }}
