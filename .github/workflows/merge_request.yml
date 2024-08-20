@@ -18,5 +18,5 @@ jobs:
       - name: Trigger Lambda
         uses: actions/aws-lambda@v2
         with:
-          lambda-function-name: log_pull_request_changes
+          lambda-function-name: pull_request_changes_log
           payload: ${{ toJson(github.event) }}
