@@ -20,13 +20,10 @@ jobs:
         
     - name: Trigger Lambda Function
       env:
-        LAMBDA_FUNCTION_NAME: ${{ secrets.LAMBDA_FUNCTION_NAME }}
-        LAMBDA_FUNCTION_URL: ${{ secrets.LAMBDA_FUNCTION_URL }}
+        LAMBDA_FUNCTION_ARN: ${{ secrets.LAMBDA_FUNCTION_ARN }}
       run: |
         aws lambda invoke \
-          --function-name $LAMBDA_FUNCTION_NAME \
+          --function-name $LAMBDA_FUNCTION_ARN \
           --invocation-type Event \
           --payload '{}' \
           response.json
-
-
