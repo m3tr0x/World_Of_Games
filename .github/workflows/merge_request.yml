@@ -20,11 +20,13 @@ jobs:
 
     - name: Trigger API Gateway
       env:
-        API_GATEWAY_URL: ${{ secrets.API_GATEWAY_URL }}
+        API_GATEWAY_ID: ${{ secrets.API_GATEWAY_ID }}
+        API_GATEWAY_STAGE: prod
+        API_GATEWAY_PATH: /github-webhook
       run: |
-        aws apigateway invoke-api \
-          --rest-api-id w7modr0dt3 \
-          --stage-name prod \
-          --path-with-query-string /github-webhook \
+        aws apigateway test-invoke-method \
+          --rest-api-id $API_GATEWAY_ID \
+          --resource-id $(aws apigateway get-resources --rest-api-id $API_GATEWAY_ID --query 'items[?path==`'$API_GATEWAY_PATH'`].id' --output text) \
           --http-method POST \
+          --path-with-query-string $API_GATEWAY_PATH \
           --body '{}'
