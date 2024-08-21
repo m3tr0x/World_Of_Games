@@ -25,6 +25,8 @@ jobs:
       run: |
         aws lambda invoke \
           --function-name $LAMBDA_FUNCTION_NAME \
-          --function-url $LAMBDA_FUNCTION_URL \
           --invocation-type Event \
-          --payload '{}'
+          --payload '{}' \
+          response.json
+
+
