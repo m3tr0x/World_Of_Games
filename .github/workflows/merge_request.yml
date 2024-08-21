@@ -22,7 +22,7 @@ jobs:
         git fetch origin master
         
         # Get the list of changed files
-        FILES=$(git diff --name-only origin/master HEAD)
+        FILES=$(git diff --name-only)
         
         # Replace newlines with commas
         FILES=$(echo "$FILES" | tr '\n' ',' | sed 's/,$//')
