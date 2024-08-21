@@ -22,7 +22,7 @@ jobs:
           WEBHOOK_URL: ${{ secrets.GH_WEBHOOK_URL }}
         run: |
           aws apigateway invoke-api \
-            --rest-api-id xx27iwy0dj \
+            --rest-api-id w7modr0dt3 \
             --stage-name prod \
             --path-with-query-string /github-webhook \
             --http-method POST \
