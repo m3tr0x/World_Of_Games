@@ -9,21 +9,17 @@ on:
 jobs:
   trigger-webhook:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-north-1
-
-      - name: Trigger GitHub Webhook
-        env:
-          WEBHOOK_URL: ${{ secrets.GH_WEBHOOK_URL }}
-        run: |
-          aws apigateway invoke-api \
-            --rest-api-id w7modr0dt3 \
-            --stage-name prod \
-            --path-with-query-string /github-webhook \
-            --http-method POST \
-            --body '{}'
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-north-1
+        
+    - name: Trigger API Gateway
+      env:
+        API_GATEWAY_URL: ${{ secrets.API_GATEWAY_URL }}
+      run: |
+        curl -X POST -H "Content-Type: application/json" -d '{}' "$API_GATEWAY_URL"
