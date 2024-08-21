@@ -1,32 +1,17 @@
-name: pull request merge POST to AWS
+name: GitHub Webhook Trigger
 
 on:
   pull_request:
-    branches:
-      - main
     types: [closed]
-    
+    branches:
+      - master
+
 jobs:
-  send_post_request:
+  trigger-webhook:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
-    
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-      
-    - name: Terraform Init
-      run: terraform init
-      
-    - name: Terraform Validate
-      run: terraform validate
-      
-    - name: Terraform Apply
-      run: terraform apply -auto-approve
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        GITHUB_SECRET: ${{ secrets.GH_TOKEN }}
+      - name: Trigger GitHub Webhook
+        env:
+          WEBHOOK_URL: ${{ secrets.GITHUB_WEBHOOK_URL }}
+        run: |
+          curl -X POST -H "Content-Type: application/json" -d '{}' "$WEBHOOK_URL"
