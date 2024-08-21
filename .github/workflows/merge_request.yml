@@ -12,31 +12,11 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-      with:
-        fetch-depth: 0  # Ensure full history is checked out
 
-    - name: Extract changed files
-      id: file_changes
+    - name: Send pull request payload to Lambda
       run: |
-        # Fetch the full history
-        git fetch origin master
-        
-        # Get the list of changed files
-        FILES=$(git diff --name-only)
-        
-        # Replace newlines with commas
-        FILES=$(echo "$FILES" | tr '\n' ',' | sed 's/,$//')
-        
-        # Set the changed files environment variable
-        echo "changed_files=$FILES" >> $GITHUB_ENV
-
-    - name: Send data to Lambda
-      run: |
-        REPO_NAME=${{ github.repository }}
-        FILES=${{ env.changed_files }}
         LAMBDA_URL=${{ secrets.LAMBDA_FUNCTION_URL }}
-
         curl -X POST $LAMBDA_URL \
         -H "Content-Type: application/json" \
-        -d '{"repository": "'$REPO_NAME'", "files": ["'$FILES'"]}'
+        -d '${{ toJson(github.event) }}'
 
