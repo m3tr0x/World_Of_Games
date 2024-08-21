@@ -1,5 +1,4 @@
 name: GitHub Webhook Trigger
-
 on:
   pull_request:
     types: [closed]
@@ -9,21 +8,23 @@ on:
 jobs:
   trigger-webhook:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-north-1
-        
-    - name: Trigger Lambda Function
-      env:
-        LAMBDA_FUNCTION_ARN: ${{ secrets.LAMBDA_FUNCTION_ARN }}
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Extract changed files
+      id: file_changes
       run: |
-        aws lambda invoke \
-          --function-name $LAMBDA_FUNCTION_ARN \
-          --invocation-type Event \
-          --payload '{}' \
-          response.json
+        FILES=$(git diff --name-only HEAD^ HEAD)
+        echo "changed_files=$FILES" >> $GITHUB_ENV
+
+    - name: Send data to Lambda
+      run: |
+        REPO_NAME=${{ github.repository }}
+        FILES=${{ env.changed_files }}
+        LAMBDA_URL=${{ secrets.LAMBDA_FUNCTION_URL }}
+
+        curl -X POST $LAMBDA_URL \
+        -H "Content-Type: application/json" \
+        -d '{"repository": "'$REPO_NAME'", "files": "'$FILES'"}'
