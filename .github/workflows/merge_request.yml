@@ -16,7 +16,7 @@ jobs:
     - name: Extract changed files
       id: file_changes
       run: |
-        FILES=$(git diff --name-only HEAD^ HEAD)
+        FILES=$(git diff --name-only HEAD~1 HEAD)
         echo "changed_files=$FILES" >> $GITHUB_ENV
 
     - name: Send data to Lambda
