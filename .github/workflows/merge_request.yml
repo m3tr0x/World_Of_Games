@@ -12,6 +12,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # Ensure full history is checked out
 
     - name: Extract changed files
       id: file_changes
@@ -21,6 +23,11 @@ jobs:
         else
           FILES=$(git ls-tree --name-only -r HEAD)
         fi
+
+        # Replace newlines with commas
+        FILES=$(echo "$FILES" | tr '\n' ',' | sed 's/,$//')
+
+        # Set the changed files environment variable
         echo "changed_files=$FILES" >> $GITHUB_ENV
 
     - name: Send data to Lambda
@@ -31,4 +38,4 @@ jobs:
 
         curl -X POST $LAMBDA_URL \
         -H "Content-Type: application/json" \
-        -d '{"repository": "'$REPO_NAME'", "files": "'$FILES'"}'
+        -d '{"repository": "'$REPO_NAME'", "files": ["'$FILES'"]}'
