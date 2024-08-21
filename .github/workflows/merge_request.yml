@@ -18,15 +18,15 @@ jobs:
     - name: Extract changed files
       id: file_changes
       run: |
-        if git rev-parse HEAD~1 >/dev/null 2>&1; then
-          FILES=$(git diff --name-only HEAD~1 HEAD)
-        else
-          FILES=$(git ls-tree --name-only -r HEAD)
-        fi
-
+        # Fetch the full history
+        git fetch origin master
+        
+        # Get the list of changed files
+        FILES=$(git diff --name-only origin/master HEAD)
+        
         # Replace newlines with commas
         FILES=$(echo "$FILES" | tr '\n' ',' | sed 's/,$//')
-
+        
         # Set the changed files environment variable
         echo "changed_files=$FILES" >> $GITHUB_ENV
 
@@ -39,3 +39,4 @@ jobs:
         curl -X POST $LAMBDA_URL \
         -H "Content-Type: application/json" \
         -d '{"repository": "'$REPO_NAME'", "files": ["'$FILES'"]}'
+
