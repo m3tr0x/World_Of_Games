@@ -17,16 +17,12 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: eu-north-1
-
-    - name: Trigger API Gateway
+        
+    - name: Trigger Lambda Function
       env:
-        API_GATEWAY_ID: ${{ secrets.API_GATEWAY_ID }}
-        API_GATEWAY_STAGE: prod
-        API_GATEWAY_PATH: /github-webhook
+        LAMBDA_FUNCTION_URL: ${{ secrets.LAMBDA_FUNCTION_URL }}
       run: |
-        aws apigateway test-invoke-method \
-          --rest-api-id $API_GATEWAY_ID \
-          --resource-id $(aws apigateway get-resources --rest-api-id $API_GATEWAY_ID --query 'items[?path==`'$API_GATEWAY_PATH'`].id' --output text) \
-          --http-method POST \
-          --path-with-query-string $API_GATEWAY_PATH \
-          --body '{}'
+        aws lambda invoke \
+          --function-url $LAMBDA_FUNCTION_URL \
+          --invocation-type Event \
+          --payload '{}'
